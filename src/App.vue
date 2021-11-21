@@ -1,68 +1,7 @@
 <template>
-  <!--<div style="display: flex; justify-content: space-around;">-->
-  <!--  <textarea v-model="oldString" style="width: 49%; height: 400px;" />-->
-  <!--  <textarea v-model="newString" style="width: 49%; height: 400px;" />-->
-  <!--</div>-->
-  <!--<a-form-->
-  <!--  style="margin: 10px;"-->
-  <!--  layout="inline"-->
-  <!--  :model="formState">-->
-  <!--  <a-form-item label="文件名(filename)">-->
-  <!--    <a-input v-model:value="formState.filename" placeholder="请输入文件名" />-->
-  <!--  </a-form-item>-->
-  <!--  <a-form-item label="差异化范围(context)">-->
-  <!--    <a-input-number-->
-  <!--      v-model:value="formState.context"-->
-  <!--      :min="0" />-->
-  <!--  </a-form-item>-->
-  <!--  <a-form-item label="显示方式(outputFormat)">-->
-  <!--    <a-radio-group v-model:value="formState.outputFormat">-->
-  <!--      <a-radio value="line-by-line">line-by-line</a-radio>-->
-  <!--      <a-radio value="side-by-side">side-by-side</a-radio>-->
-  <!--    </a-radio-group>-->
-  <!--  </a-form-item>-->
-  <!--  <a-form-item label="差异级别(diffStyle)">-->
-  <!--    <a-radio-group v-model:value="formState.diffStyle">-->
-  <!--      <a-radio value="word">word</a-radio>-->
-  <!--      <a-radio value="char">char</a-radio>-->
-  <!--    </a-radio-group>-->
-  <!--  </a-form-item>-->
-  <!--  <a-form-item label="显示文件列表(drawFileList)">-->
-  <!--    <a-switch v-model:checked="formState.drawFileList" />-->
-  <!--  </a-form-item>-->
-  <!--  <a-form-item label="内容为空时不显示(renderNothingWhenEmpty)">-->
-  <!--    <a-switch v-model:checked="formState.renderNothingWhenEmpty" />-->
-  <!--  </a-form-item>-->
-  <!--  <a-form-item label="内容无变化时显示源代码(isShowNoChange)">-->
-  <!--    <a-switch v-model:checked="formState.isShowNoChange" />-->
-  <!--  </a-form-item>-->
-  <!--  <a-form-item label="移除字符串前后空白字符(trim)">-->
-  <!--    <a-switch v-model:checked="formState.trim" />-->
-  <!--  </a-form-item>-->
-  <!--  <a-form-item>-->
-  <!--    <a-button type="link" @click="resetText">重置文本(reset text)</a-button>-->
-  <!--  </a-form-item>-->
-  <!--  <a-form-item>-->
-  <!--    <a-button type="link" @click="clearText">清空文本(clear text)</a-button>-->
-  <!--  </a-form-item>-->
-  <!--</a-form>-->
-  <!--<code-diff-->
-  <!--  :highlight="true"-->
-  <!--  :old-string="oldString"-->
-  <!--  :new-string="newString"-->
-  <!--  :context="formState.context"-->
-  <!--  :file-name="formState.filename"-->
-  <!--  :diff-style="formState.diffStyle"-->
-  <!--  :output-format="formState.outputFormat"-->
-  <!--  :draw-file-list="formState.drawFileList"-->
-  <!--  :render-nothing-when-empty="formState.renderNothingWhenEmpty"-->
-  <!--  :is-show-no-change="formState.isShowNoChange"-->
-  <!--  :trim="formState.trim"-->
-  <!--  @before-render="renderStart"-->
-  <!--  @after-render="renderEnd" />-->
-  <div>123</div>
-  <test />
-  <CodeDiff new-string="123" old-string="456" />
+  <pre v-html="a" />
+  <!--<test />-->
+  <!--<CodeDiff new-string="123" old-string="456" />-->
 </template>
 
 <script lang="ts">
@@ -71,6 +10,11 @@ import { newShortText } from './new-short-text'
 import { oldShortText } from './old-short-text'
 import test from './lib/v1/test'
 import CodeDiff from './lib/v1/CodeDiff'
+import hljs from 'highlight.js'
+import prism from 'prismjs'
+import 'prismjs/components/prism-python'
+import 'prismjs/themes/prism.css'
+import './lib/v-code-diff/styles/highlight.scss'
 
 export default defineComponent({
   name: 'App',
@@ -79,52 +23,118 @@ export default defineComponent({
     CodeDiff
   },
   setup () {
-    const oldString = ref(oldShortText.value)
-    const newString = ref(newShortText.value)
-    if (localStorage.getItem('oldString')) {
-      oldString.value = localStorage.getItem('oldString')
-    }
-    if (localStorage.getItem('newString')) {
-      newString.value = localStorage.getItem('newString')
-    }
-    const formState = reactive({
-      filename: 'package.json',
-      context: 10,
-      outputFormat: 'side-by-side',
-      diffStyle: 'word',
-      drawFileList: true,
-      renderNothingWhenEmpty: false,
-      isShowNoChange: false,
-      trim: false
-    })
-    const renderStart = () => {
-      console.log('render start: ' + new Date().toLocaleString())
-    }
-    const renderEnd = () => {
-      console.log('render end: ' + new Date().toLocaleString())
-    }
-    const resetText = () => {
-      localStorage.removeItem('oldString')
-      localStorage.removeItem('newString')
-      oldString.value = oldShortText.value
-      newString.value = newShortText.value
-    }
-    const clearText = () => {
-      localStorage.removeItem('oldString')
-      localStorage.removeItem('newString')
-      oldString.value = ''
-      newString.value = ''
-    }
-    watch(oldString, () => localStorage.setItem('oldString', oldString.value))
-    watch(newString, () => localStorage.setItem('newString', newString.value))
+    const str = `
+from functools import reduce
+from typing import TypeVar, Callable, List, Set, Generic, Dict, Iterable, Optional, Any
+from itertools import islice, chain
+
+T = TypeVar('T')
+R = TypeVar('R')
+K = TypeVar('K')
+U = TypeVar('U')
+
+
+class Stream(Generic[T]):
+    def __init__(self, stream: Iterable[T]):
+        self._stream = iter(stream)
+
+    def __iter__(self):
+        return self._stream
+
+    @staticmethod
+    def of(*args: T) -> 'Stream[T]':
+        return Stream(args)
+
+    def map(self, func: Callable[[T], R]) -> 'Stream[R]':
+        return Stream(map(func, self._stream))
+
+    def flat_map(self, func: Callable[[T], 'Stream[R]']) -> 'Stream[R]':
+        return Stream(chain.from_iterable(map(func, self._stream)))
+
+    def filter(self, func: Callable[[T], bool]) -> 'Stream[T]':
+        return Stream(filter(func, self._stream))
+
+    def for_each(self, func: Callable[[T], None]) -> None:
+        for i in self._stream:
+            func(i)
+
+    def distinct(self):
+        return Stream(list(dict.fromkeys(self._stream)))
+
+    def sorted(self, key=None, reverse=False) -> 'Stream[T]':
+        return Stream(sorted(self._stream, key=key, reverse=reverse))
+
+    def count(self) -> int:
+        return len(list(self._stream))
+
+    def reduce(self, func: Callable[[T, T], T], initial: T = None) -> 'T':
+        if initial:
+            return reduce(func, self._stream, initial)
+        else:
+            return reduce(func, self._stream)
+
+    def limit(self, max_size: int) -> 'Stream[T]':
+        return Stream(islice(self._stream, max_size))
+
+    def skip(self, n: int) -> 'Stream[T]':
+        return Stream(islice(self._stream, n, None))
+
+    def min(self, key: Callable[[T], Any] = None, default: T = None) -> T:
+        """
+        :param default: use default value when stream is empty
+        :param key: at lease supported __lt__ method
+        """
+        if key is not None:
+            return min(self._stream, key=key, default=default)
+        return min(self._stream)
+
+    def max(self, key: Callable[[T], Any] = None, default: T = None) -> T:
+        """
+        :param default: use default value when stream is empty
+        :param key: at lease supported __lt__ method
+        """
+        if key is not None:
+            return max(self._stream, key=key, default=default)
+        return max(self._stream)
+
+    def find_first(self) -> Optional[T]:
+        try:
+            return next(self._stream)
+        except StopIteration:
+            return None
+
+    def any_match(self, func: Callable[[T], bool]) -> bool:
+        """
+        this is equivalent to
+            for i in self._stream:
+                if func(i):
+                    return True
+            return False
+        :param func:
+        :return:
+        """
+        return any(map(func, self._stream))
+
+    def all_match(self, func: Callable[[T], bool]) -> bool:
+        return all(map(func, self._stream))
+
+    def none_match(self, func: Callable[[T], bool]) -> bool:
+        return not self.any_match(func)
+
+    def to_list(self) -> List[T]:
+        return list(self._stream)
+
+    def to_set(self) -> Set[T]:
+        return set(self._stream)
+
+    def to_map(self, k: Callable[[T], K], v: Callable[[T], U]) -> Dict[K, U]:
+        return {k(i): v(i) for i in self._stream}
+    `
+    console.log(prism.languages)
+    // const a = prism.highlight(str, prism.languages.python, 'python')
+    const a = hljs.highlight(str, { language: 'python' }).value
     return {
-      formState,
-      oldString,
-      newString,
-      renderStart,
-      renderEnd,
-      resetText,
-      clearText
+      a
     }
   }
 })
