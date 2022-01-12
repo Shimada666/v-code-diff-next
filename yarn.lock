@@ -2677,14 +2677,14 @@ detect-indent@6.0.0:
   integrity sha1-Cr0PVJ9p/GZZolT+lnhhhrb1KP0=
 
 diff2html@^3.4.5:
-  version "3.4.7"
-  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.4.7.tgz#b57ff722e6b180f42040c45d63893decae522624"
-  integrity sha512-QbQMz1qKFxQqqWvpDAxzD37iZb7i9ixVoBjHh7y5PLg1EagYgbrM4Fley4u5YM6i2elNrJNnKjNzyNtGBx3xjw==
+  version "3.4.13"
+  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.4.13.tgz#a19fb9e47b05b7ed573590d57a45e7a132d3dd9c"
+  integrity sha512-IQb+P3aDVjjctcpRF089E9Uxjb6JInu/1SDklLaw2KapdwXKl3xd87mieweR2h6hNvdyAlylMHRrwK8M4oV1Sw==
   dependencies:
     diff "5.0.0"
     hogan.js "3.0.2"
   optionalDependencies:
-    highlight.js "10.7.2"
+    highlight.js "11.2.0"
 
 diff@5.0.0, diff@^5.0.0:
   version "5.0.0"
@@ -3872,10 +3872,10 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
-highlight.js@10.7.2:
-  version "10.7.2"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.7.2.tgz#89319b861edc66c48854ed1e6da21ea89f847360"
-  integrity sha512-oFLl873u4usRM9K63j4ME9u3etNF0PLiJhSQ8rdfuL51Wn3zkD6drf9ZW0dOzjnZI22YYG24z30JcmfCZjMgYg==
+highlight.js@11.2.0:
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.2.0.tgz#a7e3b8c1fdc4f0538b93b2dc2ddd53a40c6ab0f0"
+  integrity sha512-JOySjtOEcyG8s4MLR2MNbLUyaXqUunmSnL2kdV/KuGJOmHZuAR5xC54Ko7goAXBWNhf09Vy3B+U7vR62UZ/0iw==
 
 highlight.js@^10.5.0:
   version "10.7.3"

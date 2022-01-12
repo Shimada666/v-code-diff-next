@@ -1,27 +1,18 @@
 <template>
-  <v2 />
-  <!--<CodeDiff new-string="123" old-string="456" />-->
+  <div v-html="html" />
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, ref, watch } from 'vue-demi'
-import { newShortText } from './new-short-text'
-import { oldShortText } from './old-short-text'
-import CodeDiff from './lib/v1/CodeDiff'
-import v2 from './lib/v-code-diff/v2.vue'
-// import hljs from 'highlight.js'
-// import prism from 'prismjs'
-// import 'prismjs/components/prism-python'
-// import 'prismjs/themes/prism.css'
-// import './lib/v-code-diff/styles/highlight.scss'
+<script lang="ts" setup>
+import { createPatch } from 'diff'
+import { newShortText } from '@/new-short-text'
+import { oldShortText } from '@/old-short-text'
+import * as d2h from 'diff2html'
+import hljs from 'highlight.js'
+import 'diff2html/bundles/css/diff2html.min.css'
 
-export default defineComponent({
-  name: 'App',
-  components: {
-    v2
-  },
-  setup () {
-    const str = `
+const oldString = oldShortText.value
+const newString = newShortText.value
+const pycode = `
 from functools import reduce
 from typing import TypeVar, Callable, List, Set, Generic, Dict, Iterable, Optional, Any
 from itertools import islice, chain
@@ -128,21 +119,43 @@ class Stream(Generic[T]):
     def to_map(self, k: Callable[[T], K], v: Callable[[T], U]) -> Dict[K, U]:
         return {k(i): v(i) for i in self._stream}
     `
-    // console.log(prism.languages)
-    // // const a = prism.highlight(str, prism.languages.python, 'python')
-    // const a = hljs.highlight(str, { language: 'python' }).value
-    // return {
-    //   a
-    // }
-  }
+const dd = createPatch('123', pycode, newString, '', '', { context: 3 })
+const struct = d2h.parse(dd, {
+  outputFormat: 'side-by-side',
+  drawFileList: false,
+  matching: 'lines',
+  diffStyle: 'word',
+  renderNothingWhenEmpty: false
 })
+const html = d2h.html(dd, {
+  outputFormat: 'side-by-side',
+  drawFileList: false,
+  matching: 'lines',
+  diffStyle: 'word',
+  renderNothingWhenEmpty: false
+})
+// console.log(struct)
+const res = hljs.highlight(pycode, { language: 'python' })
+// https://github.com/hexojs/hexo-util/pull/246/files#diff-23bd09b492fb22d0b078517e838293bfa0031ece18b7bfba1adf706d5b9592d0R122
+function closeTags (res) {
+  const tokenStack = []
+  res.value = res.value.split('\n').map(line => {
+    const prepend = tokenStack.map(token => `<span class="${token}">`).join('')
+    const matches = line.matchAll(/(<span class="(.*?)">|<\/span>)/g)
+    for (const match of matches) {
+      if (match[0] === '</span>') tokenStack.shift()
+      // @ts-ignore
+      else tokenStack.unshift(match[2])
+    }
+    const append = '</span>'.repeat(tokenStack.length)
+    return prepend + line + append
+  }).join('\n')
+  return res
+}
+console.log(closeTags(res).value.split('\n'))
+
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
+<style scoped>
+
 </style>
