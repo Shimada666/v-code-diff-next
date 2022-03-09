@@ -10,8 +10,21 @@ import * as d2h from 'diff2html'
 import hljs from 'highlight.js'
 import 'diff2html/bundles/css/diff2html.min.css'
 
-const oldString = oldShortText.value
-const newString = newShortText.value
+const oldString = 'var a1 = {\n' +
+    '  "name": "vue-diff",\n' +
+    '  "version": "0.0.0",\n' +
+    '  "description": "Vue diff viewer",\n' +
+    '  "private": true,\n' +
+    '  "peerDependencies": {\n' +
+    '    "vue": "^3.0.0"\n' +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    'asdasd\n' +
+    'xxxxx'
+const newString = 'fffff\n' +
+    'asdasd\n' +
+    'ffffffffx'
 const pycode = `
 from functools import reduce
 from typing import TypeVar, Callable, List, Set, Generic, Dict, Iterable, Optional, Any
@@ -119,7 +132,7 @@ class Stream(Generic[T]):
     def to_map(self, k: Callable[[T], K], v: Callable[[T], U]) -> Dict[K, U]:
         return {k(i): v(i) for i in self._stream}
     `
-const dd = createPatch('123', pycode, newString, '', '', { context: 3 })
+const dd = createPatch('123', oldString, newString, '', '', { context: 3 })
 const struct = d2h.parse(dd, {
   outputFormat: 'side-by-side',
   drawFileList: false,
@@ -134,7 +147,7 @@ const html = d2h.html(dd, {
   diffStyle: 'word',
   renderNothingWhenEmpty: false
 })
-// console.log(struct)
+console.log(struct)
 const res = hljs.highlight(pycode, { language: 'python' })
 // https://github.com/hexojs/hexo-util/pull/246/files#diff-23bd09b492fb22d0b078517e838293bfa0031ece18b7bfba1adf706d5b9592d0R122
 function closeTags (res) {
@@ -152,7 +165,6 @@ function closeTags (res) {
   }).join('\n')
   return res
 }
-console.log(closeTags(res).value.split('\n'))
 
 </script>
 

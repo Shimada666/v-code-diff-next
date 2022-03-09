@@ -1,3 +1,3 @@
-import './highlight.scss'
-import './style.scss'
-import 'diff2html/bundles/css/diff2html.min.css'
+// import './highlight.scss'
+// import './style.scss'
+// import 'diff2html/bundles/css/diff2html.min.css'
